@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Book Searching</string>
+    <string name="search_hint">Type to search here</string>
+    <string name="entry_request">The key word is empty</string>
+    <string name="no_internet">No network connection</string>
+    <string name="no_result">No book found</string>
+</resources>
