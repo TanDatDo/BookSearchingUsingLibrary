@@ -19,8 +19,9 @@ import java.nio.channels.Pipe;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.res.Resources;
-import 	android.content.res.AssetManager;
+import android.content.res.AssetManager;
 
 import static com.dan.booksearching.BookActivity.LOG_TAG;
 
@@ -40,11 +41,12 @@ public class QueryUtils {
     private QueryUtils() {
     }
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-    private static final String JSON="";
-
+    private static final String JSON = "";
 
 
     /**
@@ -146,8 +148,6 @@ public class QueryUtils {
     }
 
 
-
-
     /**
      * Return a list of {@link Book} objects that has been built up from
      * parsing a JSON response.
@@ -155,75 +155,79 @@ public class QueryUtils {
     public static List<Book> extractBooksFromJSON(String jasonResponse) {
 
 
-    // Create an empty ArrayList that we can start adding books to
-    ArrayList<Book> books = new ArrayList<>();
+        // Create an empty ArrayList that we can start adding books to
+        ArrayList<Book> books = new ArrayList<>();
 
-    // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
-    // is formatted, a JSONException exception object will be thrown.
-    // Catch the exception so the app doesn't crash, and print the error message to the logs.
-    try {
+        // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
+        // is formatted, a JSONException exception object will be thrown.
+        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        try {
 
-        // Create a JSONObject from the SAMPLE_BOOK_RESPONSE string
-        JSONObject baseJsonResponse = new JSONObject(jasonResponse);
+            // Create a JSONObject from the SAMPLE_BOOK_RESPONSE string
+            JSONObject baseJsonResponse = new JSONObject(jasonResponse);
 
-        // Extract the JSONArray associated with the key called "items",
-        // which represents a list of items (or books).
+            // Extract the JSONArray associated with the key called "items",
+            // which represents a list of items (or books).
 
-        JSONArray itemArray = baseJsonResponse.getJSONArray("items");
+            if (baseJsonResponse.has("item")) {
+                JSONArray itemArray = baseJsonResponse.getJSONArray("items");
 
-        // For each book in the itemArray, create an {@link book} object
-        for (int i = 0; i < itemArray.length(); i++) {
+                // For each book in the itemArray, create an {@link book} object
+                for (int i = 0; i < itemArray.length(); i++) {
 
-            String mAuthor="";
-            String mImageUrl="";
-            String mTitle="";
+                    String mAuthor = "";
+                    String mImageUrl = "";
+                    String mTitle = "";
 
-            // Get a single book at position i within the list of books
-            JSONObject currentBook = itemArray.getJSONObject(i);
+                    // Get a single book at position i within the list of books
+                    JSONObject currentBook = itemArray.getJSONObject(i);
 
-            // For a given item, extract the JSONObject associated with the
-            // key called "volumeInfo", which represents a list of all information about volume
-            // for that book.
-            JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
+                    // For a given item, extract the JSONObject associated with the
+                    // key called "volumeInfo", which represents a list of all information about volume
+                    // for that book.
+                    if (currentBook.has("volumeInfo")) {
+                        JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
 
-            //Extract the title for the key called title
-            mTitle=volumeInfo.getString("title");
+                        //Extract the title for the key called title
+                        mTitle = volumeInfo.getString("title");
 
 
-            //Extract the author name for the key called author
-            if(volumeInfo.has("authors")){
-            JSONArray authorArray=volumeInfo.getJSONArray("authors");
-            StringBuilder authorStringBuilder = new StringBuilder();
-            authorStringBuilder.append(authorArray.getString(0));
-            for (int j=1; j<authorArray.length(); j++){
-               authorStringBuilder.append(", "+ authorArray.getString(j));
+                        //Extract the author name for the key called author
+                        if (volumeInfo.has("authors")) {
+                            JSONArray authorArray = volumeInfo.getJSONArray("authors");
+                            StringBuilder authorStringBuilder = new StringBuilder();
+                            authorStringBuilder.append(authorArray.getString(0));
+                            for (int j = 1; j < authorArray.length(); j++) {
+                                authorStringBuilder.append(", " + authorArray.getString(j));
+                            }
+                            mAuthor = authorStringBuilder.toString();
+                        }
+
+                        //Extract the image URl
+                        if (volumeInfo.has("imageLinks")) {
+                            JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
+                            mImageUrl = imageLinks.getString("smallThumbnail");
+                        }
+                    }
+
+                    // Create a new {@link Book} object with the imageUrl, title, author, price, and currency
+                    // from the JSON response.
+                    Book book = new Book(mImageUrl, mTitle, mAuthor);
+
+                    // Add the new {@link Book} to the list of books.
+                    books.add(book);
+                }
             }
-            mAuthor=authorStringBuilder.toString();
-            }
-
-            //Extract the image URl
-            if(volumeInfo.has("imageLinks")) {
-                JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                mImageUrl = imageLinks.getString("smallThumbnail");
-            }
-
-            // Create a new {@link Book} object with the imageUrl, title, author, price, and currency
-            // from the JSON response.
-            Book book = new Book(mImageUrl, mTitle, mAuthor);
-
-            // Add the new {@link Book} to the list of books.
-            books.add(book);
+        } catch (JSONException e) {
+            // If an error is thrown when executing any of the above statements in the "try" block,
+            // catch the exception here, so the app doesn't crash. Print a log message
+            // with the message from the exception.
+            Log.e("QueryUtils", "Problem parsing the book JSON results", e);
         }
-    } catch (JSONException e) {
-        // If an error is thrown when executing any of the above statements in the "try" block,
-        // catch the exception here, so the app doesn't crash. Print a log message
-        // with the message from the exception.
-        Log.e("QueryUtils", "Problem parsing the book JSON results", e);
+
+        // Return the list of books
+        return books;
     }
-
-    // Return the list of books
-    return books;}
-
 
 
 }

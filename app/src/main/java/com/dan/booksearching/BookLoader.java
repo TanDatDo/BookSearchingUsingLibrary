@@ -9,15 +9,17 @@ import java.util.List;
  * Created by Dat T Do on 7/14/2017.
  */
 
-public class  BookLoader extends AsyncTaskLoader<List<Book>> {
-    /** Query URL */
+public class BookLoader extends AsyncTaskLoader<List<Book>> {
+    /**
+     * Query URL
+     */
     private String mUrl;
 
     /**
      * Constructs a new {@link BookLoader}.
      *
      * @param context of the activity
-     * @param url to load data from
+     * @param url     to load data from
      */
     public BookLoader(Context context, String url) {
         super(context);

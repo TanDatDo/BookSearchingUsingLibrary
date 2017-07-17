@@ -6,35 +6,34 @@ package com.dan.booksearching;
 
 public class Book {
 
-    /**Image resource of the book*/
+    /**
+     * Image resource of the book
+     */
     private String mImageUrl;
 
-    /** Title of the book */
+    /**
+     * Title of the book
+     */
     private String mTitle;
 
 
-    /** Author name of the book */
+    /**
+     * Author name of the book
+     */
     private String mAuthor;
-
-//    /** Price of the book */
-//    private double mPrice;
-//
-//    /**Currency of the book */
-//    private String mCurrency;
-
 
     /**
      * Constructs a new {@link Book} object.
      *
-     * @param imageUrl  is the image resource id of the book
-     * @param title is the title of the book
-     * @param author is the author name of the book
+     * @param imageUrl is the image resource id of the book
+     * @param title    is the title of the book
+     * @param author   is the author name of the book
      */
 
     public Book(String imageUrl, String title, String author) {
-        mImageUrl=imageUrl;
-        mTitle=title;
-        mAuthor=author;
+        mImageUrl = imageUrl;
+        mTitle = title;
+        mAuthor = author;
 //        mPrice=price;
 //        mCurrency=currency;
     }
@@ -53,7 +52,6 @@ public class Book {
     public String getTitle() {
         return mTitle;
     }
-
 
 
     /**
