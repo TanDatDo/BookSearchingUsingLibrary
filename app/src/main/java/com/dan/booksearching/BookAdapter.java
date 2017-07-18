@@ -3,24 +3,18 @@ package com.dan.booksearching;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -29,18 +23,11 @@ import java.util.List;
 
 public class BookAdapter extends ArrayAdapter<Book> {
 
-    static class ViewHolder {
-        ImageView imageView;
-        TextView titleTextView;
-        TextView authorTextView;
-    }
-
-
     /**
      * Constructs a new {@link BookAdapter}.
      *
-     * @param context     of the app
-     * @param books is the list of books, which is the data source of the adapter
+     * @param context of the app
+     * @param books   is the list of books, which is the data source of the adapter
      */
     public BookAdapter(Context context, ArrayList<Book> books) {
         super(context, 0, books);
@@ -62,8 +49,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
             viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.title_text_view);
             viewHolder.authorTextView = (TextView) convertView.findViewById(R.id.author_text_view);
             convertView.setTag(viewHolder);
-        }
-        else {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
@@ -89,9 +75,14 @@ public class BookAdapter extends ArrayAdapter<Book> {
         return convertView;
     }
 
+    static class ViewHolder {
+        ImageView imageView;
+        TextView titleTextView;
+        TextView authorTextView;
+    }
 
     //To download the image
-    public class DownloadImageAsync extends AsyncTask<ImageView,Void, Bitmap> {
+    public class DownloadImageAsync extends AsyncTask<ImageView, Void, Bitmap> {
         private ImageView mImageView;
         private String url;
 

@@ -1,7 +1,5 @@
 package com.dan.booksearching;
 
-import android.content.ContentProviderOperation;
-import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -15,15 +13,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Pipe;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.res.Resources;
-import android.content.res.AssetManager;
-
-import static com.dan.booksearching.BookActivity.LOG_TAG;
 
 
 /**
@@ -33,6 +25,12 @@ import static com.dan.booksearching.BookActivity.LOG_TAG;
 public class QueryUtils {
 
     /**
+     * Tag for the log messages
+     */
+    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    private static final String JSON = "";
+
+    /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
      * This class is only meant to hold static variables and methods, which can be accessed
      * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
@@ -40,14 +38,6 @@ public class QueryUtils {
 
     private QueryUtils() {
     }
-
-    /**
-     * Tag for the log messages
-     */
-    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
-
-    private static final String JSON = "";
-
 
     /**
      * Query the USGS dataset and return a list of {@link Book} objects.
@@ -70,7 +60,6 @@ public class QueryUtils {
         // Return the list of {@link Book}s
         return books;
     }
-
 
     /**
      * Returns new URL object from the given string URL.
@@ -147,13 +136,11 @@ public class QueryUtils {
         return output.toString();
     }
 
-
     /**
      * Return a list of {@link Book} objects that has been built up from
      * parsing a JSON response.
      */
     public static List<Book> extractBooksFromJSON(String jasonResponse) {
-
 
         // Create an empty ArrayList that we can start adding books to
         ArrayList<Book> books = new ArrayList<>();
@@ -169,7 +156,7 @@ public class QueryUtils {
             // Extract the JSONArray associated with the key called "items",
             // which represents a list of items (or books).
 
-            if (baseJsonResponse.has("item")) {
+            if (baseJsonResponse.has("items")) {
                 JSONArray itemArray = baseJsonResponse.getJSONArray("items");
 
                 // For each book in the itemArray, create an {@link book} object
@@ -208,16 +195,18 @@ public class QueryUtils {
                             JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
                             mImageUrl = imageLinks.getString("smallThumbnail");
                         }
+
+
+                        // Create a new {@link Book} object with the imageUrl, title, author, price, and currency
+                        // from the JSON response.
+                        Book book = new Book(mImageUrl, mTitle, mAuthor);
+
+                        // Add the new {@link Book} to the list of books.
+                        books.add(book);
                     }
-
-                    // Create a new {@link Book} object with the imageUrl, title, author, price, and currency
-                    // from the JSON response.
-                    Book book = new Book(mImageUrl, mTitle, mAuthor);
-
-                    // Add the new {@link Book} to the list of books.
-                    books.add(book);
                 }
             }
+
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
@@ -228,8 +217,6 @@ public class QueryUtils {
         // Return the list of books
         return books;
     }
-
-
 }
 
 
